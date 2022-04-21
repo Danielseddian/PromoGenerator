@@ -112,7 +112,9 @@ STATIC_ROOT = join(BASE_DIR, "back_static")
 
 STATIC_URL = "/back_static/"
 
-MEDIA_ROOT = join(BASE_DIR, "media")
+MEDIA_DIR = "media"
+
+MEDIA_ROOT = join(BASE_DIR, MEDIA_DIR)
 
 MEDIA_URL = "/media/"
 

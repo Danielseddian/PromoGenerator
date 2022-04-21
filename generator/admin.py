@@ -18,6 +18,8 @@ class PromoAdmin(admin.ModelAdmin):
     shown_fields = ("id", "group", "promo")
     list_display = shown_fields
     search_fields = shown_fields
+    list_display_links = ("id", "group")
+    list_editable = ("promo",)
     list_filter = shown_fields
     empty_value_display = "-пусто-"
 

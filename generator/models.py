@@ -1,12 +1,15 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
+from PromoGenerator.settings import MEDIA_ROOT
+
 User = get_user_model()
 
 
 class Group(models.Model):
     group = models.CharField(max_length=100, unique=True, verbose_name="Группа")
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="promo_group")
+    download = models.FileField(verbose_name="Скачать",upload_to=MEDIA_ROOT)
 
     class Meta:
         verbose_name = "Группа"

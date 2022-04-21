@@ -1,12 +1,15 @@
+import json
 import secrets
 import string
+import os
 
+from PromoGenerator.settings import MEDIA_ROOT
 from .models import Promo
 
 
-def make_promo(prefix="", length=20, excludes="", symbols=string.printable[:-6]):
+def make_promo(length=20, prefix="", symbols=string.ascii_letters + string.digits + "!#$%&-_", exclude=""):
     length -= len(prefix)
-    symbols = symbols.translate({ord(exclude): None for exclude in excludes})
+    symbols = symbols.translate({ord(excluding): None for excluding in exclude})
     return prefix + ''.join(secrets.choice(symbols) for _ in range(length))
 
 
@@ -19,3 +22,17 @@ def bulk_make_promo(amount, params):
             new_promos.append(promo)
             amount -= 1
     return new_promos
+
+
+def make_promo_txt(data):
+    data = json.loads(json.dumps(data))
+    extra = [key for key in data if key not in ("group", "promo")]
+    for key in extra:
+        data.pop(key)
+    print(data)
+    if not os.path.exists(MEDIA_ROOT):
+        os.makedirs(MEDIA_ROOT)
+    file_name = f"{data['group']}_promo.rtf"
+    with open(MEDIA_ROOT + "\\" + file_name, "w") as file:
+        file.write(str(data))
+    return file_name
