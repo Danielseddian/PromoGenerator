@@ -5,8 +5,6 @@ from .models import Group, Promo, User
 from .generator import make_promo, bulk_make_promo, make_promo_txt
 
 PROMO_PARAMS_ERROR_MSG = "Параметры генератора заданы неверно, дополнительно можно указать только: {}"
-PROMO_LEN_ERROR_MSG = "Для надёжности длинна промокода без учёта префикса должна быть не меньше 5, заданная длинна - {}"
-
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)

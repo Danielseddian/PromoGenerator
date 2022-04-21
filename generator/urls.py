@@ -5,7 +5,7 @@ from rest_framework.routers import DefaultRouter
 from .views import PromoViewSet, CheckView, CreateUserView
 
 router = DefaultRouter()
-router.register("promos", PromoViewSet, basename="promos")
+router.register("promo", PromoViewSet, basename="promos")
 router.register("check", CheckView, basename="check")
 router.register("signup", CreateUserView, basename="signup")
 
