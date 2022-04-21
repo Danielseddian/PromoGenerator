@@ -1,3 +1,4 @@
+from datetime import timedelta
 from pathlib import Path
 from os import environ
 from os.path import join
@@ -43,6 +44,12 @@ MIDDLEWARE = [
     middleware + "clickjacking.XFrameOptionsMiddleware",
 ]
 
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
+    "DEFAULT_AUTHENTICATION_CLASSES": ["rest_framework_simplejwt.authentication.JWTAuthentication"],
+    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
+}
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -84,6 +91,8 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": password_validation + "NumericPasswordValidator",
     },
 ]
+
+SIMPLE_JWT = {"ACCESS_TOKEN_LIFETIME": timedelta(days=30)}
 
 LANGUAGE_CODE = "ru-ru"
 
