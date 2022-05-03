@@ -2,7 +2,7 @@ from django.db import models
 from rest_framework import serializers
 
 from .models import Group, Promo, User
-from .generator import make_promo, bulk_make_promo, make_promo_txt, validate_promo_params
+from .generator import make_promo, bulk_make_promo, make_promo_json, validate_promo_params
 
 PROMO_PARAMS_ERROR_MSG = "Параметры генератора заданы неверно, дополнительно можно указать только: {}"
 
@@ -28,16 +28,17 @@ class GroupSerializer(serializers.ModelSerializer):
         return list(obj.promo.all().values_list("promo", flat=True))
 
     def get_file(self, group):
-        self.update(group, {"download": make_promo_txt(self.data)})
+        self.update(group, {"download": make_promo_json()})
         return self
 
 
-def get_group(group, user):
+def get_group(group):
     if not isinstance(group, str) and not isinstance(group, int):
         raise serializers.ValidationError("Необходимо указать название или id группы промокодов")
-    group = (Group.objects.filter(group=group) or [Group.objects.create(group=group, author=user)])[0]
+    group = (Group.objects.get_or_create(group=group))[0]
+    """
     if group.author != user and not group.access.filter(users=user):
-        raise serializers.ValidationError("Нет прав для добавления промокодов в эту группу")
+        raise serializers.ValidationError("Нет прав для добавления промокодов в эту группу")"""
     return group
 
 

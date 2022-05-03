@@ -26,7 +26,7 @@ class PromoViewSet(BaseCreate, RetrieveModelMixin, ListModelMixin):
         return user.promo_group.all() | Group.objects.filter(id__in=has_access)
 
     def create(self, request):
-        group = get_group((req_get := request.data.get)("group"), user=User.objects.get(id=1))
+        group = get_group((req_get := request.data.get)("group"))
         create_promo(group, req_get("amount", 1), req_get("params", {}))
         self.serializer_class(group).get_file(group)
         headers = self.get_success_headers((serializer := self.serializer_class(group)).data)

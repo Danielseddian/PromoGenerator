@@ -5,7 +5,7 @@ import os
 from rest_framework import serializers
 
 from PromoGenerator.settings import MEDIA_ROOT
-from .models import Promo
+from .models import Promo, Group
 
 PROMO_SHORT_MSG = "Длинна промокода без учёта префикса должна быть не меньше 5 знаков, заданная длинна - {}"
 PROMO_LONG_MSG = "Длинна промокода с учётом префикса не может быть больше 120 знаков, заданная длинна - {}"
@@ -29,8 +29,9 @@ def make_promo(length=20, prefix="", symbols=string.ascii_letters + string.digit
     return prefix + "".join(secrets.choice(symbols) for _ in range(length))
 
 
-def bulk_make_promo(amount=1, params={}):
-    promos = Promo.objects.all().values_list("promo", flat=True)
+def bulk_make_promo(amount=1, params={}, promos=None):
+    if not promos:
+        promos = Promo.objects.all().values_list("promo", flat=True)
     new_promos = []
     while amount:
         promo = make_promo(**params)
@@ -40,15 +41,13 @@ def bulk_make_promo(amount=1, params={}):
     return new_promos
 
 
-def make_promo_txt(data):
+def make_promo_json():
+    groups = Group.objects.all()
+    data = {group.group: list(group.promo.values_list("promo", flat=True)) for group in groups}
     data = json.loads(json.dumps(data))
-    extra = [key for key in data if key not in ("group", "promo")]
-    for key in extra:
-        data.pop(key)
-    print(data)
     if not os.path.exists(MEDIA_ROOT):
         os.makedirs(MEDIA_ROOT)
-    file_name = f"{data['group']}_promo.rtf"
-    with open(MEDIA_ROOT + "\\" + file_name, "w") as file:
+    file_name = "promo.json"
+    with open(MEDIA_ROOT + "\\" + file_name, "w+") as file:
         file.write(str(data))
     return file_name
