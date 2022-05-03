@@ -44,10 +44,10 @@ def bulk_make_promo(amount=1, params={}, promos=None):
 def make_promo_json():
     groups = Group.objects.all()
     data = {group.group: list(group.promo.values_list("promo", flat=True)) for group in groups}
-    data = json.loads(json.dumps(data))
     if not os.path.exists(MEDIA_ROOT):
         os.makedirs(MEDIA_ROOT)
     file_name = "promo.json"
-    with open(MEDIA_ROOT + "\\" + file_name, "w+") as file:
-        file.write(str(data))
+    with open(MEDIA_ROOT + "\\" + file_name, 'w', encoding='utf-8') as file:
+        file.write(
+            json.dumps(data, ensure_ascii=False))
     return file_name
