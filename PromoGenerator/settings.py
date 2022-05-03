@@ -25,6 +25,7 @@ DJANGO_APPS = [
 
 LOCAL_APPS = [
     "generator.apps.GeneratorConfig",
+    "core",
 ]
 
 OTHER_APPS = [
@@ -74,6 +75,7 @@ DATABASES = {
         "PASSWORD": environ.get("POSTGRES_PASSWORD", "postgres"),
         "HOST": environ.get("DB_HOST", "localhost"),
         "PORT": environ.get("DB_PORT", "5432"),
+        "CONN_MAX_AGE": 600,
     }
 }
 

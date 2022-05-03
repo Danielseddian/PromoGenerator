@@ -11,7 +11,7 @@ PROMO_SHORT_MSG = "Длинна промокода без учёта префи�
 PROMO_LONG_MSG = "Длинна промокода с учётом префикса не может быть больше 120 знаков, заданная длинна - {}"
 
 
-def make_promo(length=20, prefix="", symbols=string.ascii_letters + string.digits + "!#$%&-_", exclude=""):
+def validate_promo_params(length=20, prefix="", symbols=string.ascii_letters + string.digits + "!#$%&-_", exclude=""):
     if not (
         isinstance(length, int) and isinstance(prefix, str) and isinstance(symbols, str) and isinstance(exclude, str)
     ):
@@ -21,12 +21,16 @@ def make_promo(length=20, prefix="", symbols=string.ascii_letters + string.digit
     length -= len(prefix)
     if length < 5:
         raise serializers.ValidationError(PROMO_SHORT_MSG.format(length))
+
+
+def make_promo(length=20, prefix="", symbols=string.ascii_letters + string.digits + "!#$%&-_", exclude=""):
+    length -= len(prefix)
     symbols = symbols.translate({ord(excluding): None for excluding in exclude})
     return prefix + "".join(secrets.choice(symbols) for _ in range(length))
 
 
-def bulk_make_promo(amount, params):
-    promos = Promo.objects.all().values_list("promo")
+def bulk_make_promo(amount=1, params={}):
+    promos = Promo.objects.all().values_list("promo", flat=True)
     new_promos = []
     while amount:
         promo = make_promo(**params)

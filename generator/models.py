@@ -8,8 +8,8 @@ User = get_user_model()
 
 class Group(models.Model):
     group = models.CharField(max_length=100, unique=True, verbose_name="Группа")
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="promo_group")
-    download = models.FileField(verbose_name="Скачать",upload_to=MEDIA_ROOT)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="promo_group", blank=True, null=True)
+    download = models.FileField(verbose_name="Скачать",upload_to=MEDIA_ROOT, blank=True, null=True)
 
     class Meta:
         verbose_name = "Группа"

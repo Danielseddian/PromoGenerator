@@ -2,7 +2,7 @@ from django.db import models
 from rest_framework import serializers
 
 from .models import Group, Promo, User
-from .generator import make_promo, bulk_make_promo, make_promo_txt
+from .generator import make_promo, bulk_make_promo, make_promo_txt, validate_promo_params
 
 PROMO_PARAMS_ERROR_MSG = "Параметры генератора заданы неверно, дополнительно можно указать только: {}"
 
@@ -45,6 +45,7 @@ def create_promo(group, amount, params):
     promo_params = make_promo.__code__.co_varnames
     if not set(promo_params) >= set(params):
         raise serializers.ValidationError(PROMO_PARAMS_ERROR_MSG.format(", ".join(promo_params)))
+    validate_promo_params(params)
     promo_bodies = [Promo(group=group, promo=promo) for promo in bulk_make_promo(amount, params)]
     Promo.objects.bulk_create(promo_bodies)
 
