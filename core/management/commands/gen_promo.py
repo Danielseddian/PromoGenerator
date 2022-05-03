@@ -7,7 +7,7 @@ from generator.models import Group, Promo
 from generator.generator import validate_promo_params, bulk_make_promo, make_promo_json
 
 SYMBOLS_HELP_TEXT = "Символы, из которых будет формироваться промокод, по умолчанию все буквы и цыфры + «!#$%&-_»"
-EXCLUDE_HELP_TEXT = "Исключения, которые будут исключены из формирования промокода, подходит для символов по умолчанию"
+EXCLUDE_HELP_TEXT = "Символы, которые будут исключены из формирования промокода, подходит для символов по умолчанию"
 
 
 class Command(BaseCommand):
